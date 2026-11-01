@@ -1,0 +1,40 @@
+{
+  "name": "ve-so-do",
+  "description": "Generate, validate, and render UML analysis/design diagrams for the supermarket sales-management exam. AI agents should call this CLI from the project root using zsh/bash.",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "validate_diagrams",
+      "description": "Validate one JSON definition containing one diagram or a diagrams array.",
+      "command": "qldbh_diagram_tools/bin/qldbh-diagrams validate <input.json>",
+      "parameters": {
+        "input": {"type": "string", "description": "Path to JSON definition file"}
+      }
+    },
+    {
+      "name": "generate_sources",
+      "description": "Generate one .puml source per diagram, or Markdown for scenario definitions.",
+      "command": "qldbh_diagram_tools/bin/qldbh-diagrams generate <input.json> --out-dir <output_dir>",
+      "parameters": {
+        "input": {"type": "string", "description": "Path to JSON definition file"},
+        "output_dir": {"type": "string", "description": "Directory to receive generated .puml/.md files"}
+      }
+    },
+    {
+      "name": "render_diagrams",
+      "description": "Generate .puml sources then render PNG/SVG using vendored plantuml.jar. Preferred tool when image files are required.",
+      "command": "qldbh_diagram_tools/bin/qldbh-diagrams render <input.json> --out-dir <output_dir>",
+      "parameters": {
+        "input": {"type": "string", "description": "Path to JSON definition file"},
+        "output_dir": {"type": "string", "description": "Directory to receive generated image and .puml files"},
+        "timeout": {"type": "integer", "description": "Optional PlantUML timeout in seconds"}
+      }
+    },
+    {
+      "name": "list_examples",
+      "description": "List built-in diagrams matching the exam questions.",
+      "command": "qldbh_diagram_tools/bin/qldbh-diagrams examples",
+      "parameters": {}
+    }
+  ]
+}

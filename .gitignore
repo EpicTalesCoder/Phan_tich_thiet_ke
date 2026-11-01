@@ -1,0 +1,30 @@
+# --- PlantUML / JRE vendor binaries (163 MB, re-downloadable) ---
+qldbh_diagram_tools/vendor/
+
+# --- Generated outputs (recreate with: qldbh_diagram_tools/bin/qldbh-diagrams render ...) ---
+qldbh_diagram_tools/output/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# --- Editors / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- OS / temp ---
+*.log
+*.tmp
+Thumbs.db

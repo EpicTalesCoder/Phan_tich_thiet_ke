@@ -1,0 +1,421 @@
+{
+  "diagrams": [
+    {
+      "id": "UC01_QLBH_TongQuan",
+      "type": "use_case",
+      "title": "Biểu đồ Use Case tổng quát - Hệ thống QLBH siêu thị",
+      "format": "png",
+      "data": {
+        "system": "Hệ thống QLBH siêu thị",
+        "actors": [
+          {"id": "A_NhanVien", "label": "Nhân viên"},
+          {"id": "A_KhachHang", "label": "Khách hàng"},
+          {"id": "A_HeThongThanhToan", "label": "Hệ thống thanh toán"}
+        ],
+        "useCases": [
+          {"id": "UC_DangNhap", "label": "Đăng nhập"},
+          {"id": "UC_CapNhatMatHang", "label": "Cập nhật danh sách Mặt hàng"},
+          {"id": "UC_ThemMatHang", "label": "Thêm mặt hàng mới"},
+          {"id": "UC_XoaMatHang", "label": "Xóa mặt hàng"},
+          {"id": "UC_SuaMatHang", "label": "Sửa thông tin mặt hàng"},
+          {"id": "UC_BanHangTrucTiep", "label": "Bán hàng trực tiếp tại siêu thị"},
+          {"id": "UC_TaoHoaDon", "label": "Tạo hóa đơn bán hàng"},
+          {"id": "UC_ThanhToan", "label": "Thanh toán"},
+          {"id": "UC_DangKyThanhVien", "label": "Đăng ký thành viên"},
+          {"id": "UC_DatHangOnline", "label": "Đặt mua hàng online"}
+        ],
+        "associations": [
+          {"from": "A_NhanVien", "to": "UC_CapNhatMatHang"},
+          {"from": "A_NhanVien", "to": "UC_BanHangTrucTiep"},
+          {"from": "A_KhachHang", "to": "UC_DangKyThanhVien"},
+          {"from": "A_KhachHang", "to": "UC_DatHangOnline"},
+          {"from": "A_HeThongThanhToan", "to": "UC_ThanhToan"}
+        ],
+        "includes": [
+          {"from": "UC_CapNhatMatHang", "to": "UC_DangNhap"},
+          {"from": "UC_BanHangTrucTiep", "to": "UC_DangNhap"},
+          {"from": "UC_DangKyThanhVien", "to": "UC_DangNhap"},
+          {"from": "UC_DatHangOnline", "to": "UC_DangNhap"},
+          {"from": "UC_ThemMatHang", "to": "UC_CapNhatMatHang"},
+          {"from": "UC_XoaMatHang", "to": "UC_CapNhatMatHang"},
+          {"from": "UC_SuaMatHang", "to": "UC_CapNhatMatHang"},
+          {"from": "UC_BanHangTrucTiep", "to": "UC_TaoHoaDon"},
+          {"from": "UC_TaoHoaDon", "to": "UC_ThanhToan"}
+        ],
+        "extends": [],
+        "notes": [
+          {"target": "UC_DangNhap", "text": "Yêu cầu chung của nhân viên và khách hàng khi truy nhập hệ thống"}
+        ]
+      }
+    },
+    {
+      "id": "SC_UC01_ThemMatHang",
+      "type": "use_case_scenario",
+      "title": "Kịch bản Thêm mặt hàng mới vào danh sách Mặt hàng",
+      "format": "png",
+      "data": {
+        "id": "UC-THem-MH",
+        "useCase": "Thêm mặt hàng mới vào danh sách Mặt hàng",
+        "actor": "Nhân viên",
+        "preconditions": [
+          "Nhân viên đã đăng nhập vào hệ thống QLBH",
+          "Nhân viên có quyền cập nhật danh sách Mặt hàng"
+        ],
+        "mainFlow": [
+          "Nhân viên chọn chức năng Cập nhật danh sách Mặt hàng.",
+          "Hệ thống hiển thị danh sách Mặt hàng hiện có.",
+          "Nhân viên chọn Thêm mặt hàng mới.",
+          "Hệ thống hiển thị form nhập thông tin mặt hàng.",
+          "Nhân viên nhập mã, tên, đơn vị tính, giá bán và tồn kho ban đầu.",
+          "Nhân viên xác nhận lưu mặt hàng mới.",
+          "Hệ thống kiểm tra dữ liệu nhập và mã mặt hàng chưa tồn tại.",
+          "Hệ thống lưu mặt hàng mới và cập nhật danh sách.",
+          "Hệ thống hiển thị thông báo thêm mặt hàng thành công."
+        ],
+        "alternativeFlows": [
+          {
+            "name": "Dữ liệu nhập không hợp lệ",
+            "steps": [
+              "Tại bước 7, hệ thống phát hiện dữ liệu bắt buộc thiếu hoặc giá trị không hợp lệ.",
+              "Hệ thống hiển thị thông báo lỗi và yêu cầu nhập lại.",
+              "Quay lại bước 5."
+            ]
+          },
+          {
+            "name": "Mã mặt hàng đã tồn tại",
+            "steps": [
+              "Tại bước 7, hệ thống phát hiện mã mặt hàng đã tồn tại.",
+              "Hệ thống hiển thị thông báo trùng mã và không lưu bản ghi mới.",
+              "Quay lại bước 5."
+            ]
+          },
+          {
+            "name": "Nhân viên không có quyền",
+            "steps": [
+              "Tại bước 1, hệ thống xác nhận nhân viên không có quyền cập nhật.",
+              "Hệ thống hiển thị thông báo không có quyền và kết thúc use case."
+            ]
+          }
+        ],
+        "postconditions": [
+          "Mặt hàng mới được lưu vào danh sách Mặt hàng",
+          "Dữ liệu nhập không hợp lệ không được lưu",
+          "Nhật ký cập nhật hệ thống được ghi lại"
+        ]
+      }
+    },
+    {
+      "id": "SC_UC02_BanHangTrucTiep",
+      "type": "use_case_scenario",
+      "title": "Kịch bản Bán hàng trực tiếp tại siêu thị",
+      "format": "png",
+      "data": {
+        "id": "UC-BanHang-TT",
+        "useCase": "Bán hàng trực tiếp tại siêu thị",
+        "actor": "Nhân viên",
+        "preconditions": [
+          "Nhân viên đã đăng nhập vào hệ thống QLBH",
+          "Nhân viên có quyền bán hàng trực tiếp",
+          "Có ít nhất một mặt hàng đang kinh doanh"
+        ],
+        "mainFlow": [
+          "Nhân viên tạo phiên bán hàng mới.",
+          "Nhân viên quét mã hoặc chọn mặt hàng cần bán.",
+          "Hệ thống hiển thị thông tin và kiểm tra tồn kho của mặt hàng.",
+          "Hệ thống thêm mặt hàng vào chi tiết hóa đơn và cập nhật số tiền tạm tính.",
+          "Nhân viên lặp lại bước 2 đến 4 cho các mặt hàng khác.",
+          "Hệ thống tính tổng tiền cần thanh toán.",
+          "Nhân viên xác nhận thông tin khách hàng và hình thức thanh toán.",
+          "Hệ thống xác nhận thanh toán thành công.",
+          "Hệ thống lưu hóa đơn, cập nhật tồn kho và in hóa đơn."
+        ],
+        "alternativeFlows": [
+          {
+            "name": "Không đủ tồn kho",
+            "steps": [
+              "Tại bước 3, hệ thống phát hiện số lượng bán vượt tồn kho.",
+              "Hệ thống hiển thị thông báo không đủ hàng.",
+              "Nhân viên giảm số lượng hoặc loại bỏ mặt hàng khỏi giỏ hàng."
+            ]
+          },
+          {
+            "name": "Khách hàng là thành viên",
+            "steps": [
+              "Tại bước 7, nhân viên tra cứu thông tin thành viên.",
+              "Hệ thống áp dụng ưu đãi tương ứng cho khách hàng.",
+              "Hệ thống cập nhật tổng tiền phải thanh toán."
+            ]
+          },
+          {
+            "name": "Thanh toán thất bại",
+            "steps": [
+              "Tại bước 8, hệ thống không nhận được xác nhận thanh toán.",
+              "Hệ thống hiển thị thông báo thanh toán thất bại.",
+              "Nhân viên thử lại hình thức thanh toán khác hoặc hủy phiên bán."
+            ]
+          }
+        ],
+        "postconditions": [
+          "Hóa đơn bán hàng được lưu khi giao dịch thành công",
+          "Tồn kho được cập nhật theo số lượng bán",
+          "Hóa đơn được in hoặc gửi cho khách hàng"
+        ]
+      }
+    },
+    {
+      "id": "CD01_LopPhanTich_ThucThe",
+      "type": "class",
+      "title": "Câu 2a - Biểu đồ lớp phân tích các lớp thực thể",
+      "format": "png",
+      "data": {
+        "classes": [
+          {
+            "id": "NhanVien",
+            "name": "NhanVien",
+            "stereotype": "entity",
+            "attributes": ["- maNhanVien: String", "- hoTen: String", "- vaiTro: String"],
+            "methods": ["dangNhap()", "coQuyenCapNhatMatHang()", "coQuyenBanHang()"]
+          },
+          {
+            "id": "KhachHang",
+            "name": "KhachHang",
+            "stereotype": "entity",
+            "attributes": ["- maKhachHang: String", "- hoTen: String", "- soDienThoai: String", "- email: String", "- laThanhVien: boolean"],
+            "methods": ["dangKyThanhVien()", "datHangOnline()", "traCuuThongTin()"]
+          },
+          {
+            "id": "MatHang",
+            "name": "MatHang",
+            "stereotype": "entity",
+            "attributes": ["- maMatHang: String", "- tenMatHang: String", "- donViTinh: String", "- giaBan: double", "- tonKho: int"],
+            "methods": ["themMoi()", "capNhatThongTin()", "xoa()", "kiemTraTonKho()", "giamTonKho()"]
+          },
+          {
+            "id": "HoaDon",
+            "name": "HoaDon",
+            "stereotype": "entity",
+            "attributes": ["- maHoaDon: String", "- ngayLap: Date", "- loaiBan: String", "- tongTien: double"],
+            "methods": ["themChiTiet()", "tinhTongTien()", "luuHoaDon()", "inHoaDon()"]
+          },
+          {
+            "id": "ChiTietHoaDon",
+            "name": "ChiTietHoaDon",
+            "stereotype": "entity",
+            "attributes": ["- maChiTiet: String", "- soLuong: int", "- donGiaBan: double", "- thanhTien: double"],
+            "methods": ["tinhThanhTien()"]
+          },
+          {
+            "id": "DonHangOnline",
+            "name": "DonHangOnline",
+            "stereotype": "entity",
+            "attributes": ["- maDonHang: String", "- ngayDat: Date", "- diaChiGiaoHang: String", "- trangThai: String"],
+            "methods": ["xacNhanDonHang()", "capNhatTrangThai()", "tinhTongTien()"]
+          },
+          {
+            "id": "DangKyThanhVien",
+            "name": "DangKyThanhVien",
+            "stereotype": "entity",
+            "attributes": ["- maDangKy: String", "- ngayDangKy: Date", "- trangThai: String"],
+            "methods": ["xacNhanDangKy()", "tuChoiDangKy()"]
+          }
+        ],
+        "relations": [
+          {"from": "NhanVien", "to": "MatHang", "type": "association", "multiplicityFrom": "1", "multiplicityTo": "0..*", "label": "cập nhật"},
+          {"from": "NhanVien", "to": "HoaDon", "type": "association", "multiplicityFrom": "1", "multiplicityTo": "0..*", "label": "lập hóa đơn"},
+          {"from": "KhachHang", "to": "DonHangOnline", "type": "association", "multiplicityFrom": "1", "multiplicityTo": "0..*", "label": "đặt hàng"},
+          {"from": "KhachHang", "to": "DangKyThanhVien", "type": "association", "multiplicityFrom": "1", "multiplicityTo": "0..*", "label": "đăng ký"},
+          {"from": "MatHang", "to": "ChiTietHoaDon", "type": "association", "multiplicityFrom": "1", "multiplicityTo": "0..*", "label": "được bán trong"},
+          {"from": "HoaDon", "to": "ChiTietHoaDon", "type": "composition", "multiplicityFrom": "1", "multiplicityTo": "1..*", "label": "gồm"},
+          {"from": "HoaDon", "to": "DonHangOnline", "type": "aggregation", "multiplicityFrom": "0..1", "multiplicityTo": "0..*", "label": "phát sinh từ"}
+        ]
+      }
+    },
+    {
+      "id": "CD02_LopThietKe_Bien_DieuKhien",
+      "type": "class",
+      "title": "Câu 2b - Biểu đồ lớp thiết kế Entity - Boundary - Control",
+      "format": "png",
+      "data": {
+        "classes": [
+          {"id": "UIQuanLyMatHang", "name": "UCQuanLyMatHang", "stereotype": "boundary", "attributes": ["- danhSachMatHang: List"], "methods": ["hienThiDanhSach()", "nhapThongTinMatHang()", "hienThiThongBao()"]},
+          {"id": "UIBanHang", "name": "UCBanHang", "stereotype": "boundary", "attributes": ["- gioHang: List"], "methods": ["themMatHang()", "capNhatSoLuong()", "hienThiTongTien()"]},
+          {"id": "UIDangNhap", "name": "UCDangNhap", "stereotype": "boundary", "attributes": ["- tenDangNhap: String", "- matKhau: String"], "methods": ["nhapThongTinDangNhap()", "hienThiLoi()"]},
+          {"id": "CTLQuanLyMatHang", "name": "CTLQuanLyMatHang", "stereotype": "control", "attributes": [], "methods": ["kiemTraQuyen()", "kiemTraDuLieu()", "themMatHangMoi()", "capNhatMatHang()"]},
+          {"id": "CTLBanHang", "name": "CTLBanHang", "stereotype": "control", "attributes": [], "methods": ["taoPhienBanHang()", "themChiTietBanHang()", "kiemTraTonKho()", "tinhTongTien()", "taoHoaDon()"]},
+          {"id": "CTLDangNhap", "name": "CTLDangNhap", "stereotype": "control", "attributes": [], "methods": ["xuLyDangNhap()", "phanQuyen()"]},
+          {"id": "NhanVien", "name": "NhanVien", "stereotype": "entity", "attributes": ["- maNhanVien", "- hoTen", "- vaiTro"], "methods": ["dangNhap()", "coQuyen()"]},
+          {"id": "KhachHang", "name": "KhachHang", "stereotype": "entity", "attributes": ["- maKhachHang", "- hoTen", "- laThanhVien"], "methods": ["dangKyThanhVien()", "datHangOnline()"]},
+          {"id": "MatHang", "name": "MatHang", "stereotype": "entity", "attributes": ["- maMatHang", "- tenMatHang", "- giaBan", "- tonKho"], "methods": ["themMoi()", "capNhat()", "xoa()", "kiemTraTonKho()"]},
+          {"id": "HoaDon", "name": "HoaDon", "stereotype": "entity", "attributes": ["- maHoaDon", "- ngayLap", "- tongTien"], "methods": ["themChiTiet()", "tinhTongTien()", "luuHoaDon()"]},
+          {"id": "ChiTietHoaDon", "name": "ChiTietHoaDon", "stereotype": "entity", "attributes": ["- soLuong", "- donGiaBan", "- thanhTien"], "methods": ["tinhThanhTien()"]}
+        ],
+        "relations": [
+          {"from": "UIQuanLyMatHang", "to": "CTLQuanLyMatHang", "type": "association", "label": "gửi yêu cầu"},
+          {"from": "UIBanHang", "to": "CTLBanHang", "type": "association", "label": "gửi yêu cầu"},
+          {"from": "UIDangNhap", "to": "CTLDangNhap", "type": "association", "label": "gửi thông tin"},
+          {"from": "CTLDangNhap", "to": "NhanVien", "type": "dependency", "label": "xác thực"},
+          {"from": "CTLQuanLyMatHang", "to": "MatHang", "type": "dependency", "label": "quản lý"},
+          {"from": "CTLBanHang", "to": "MatHang", "type": "dependency", "label": "kiểm tra"},
+          {"from": "CTLBanHang", "to": "HoaDon", "type": "dependency", "label": "tạo/lưu"},
+          {"from": "CTLBanHang", "to": "ChiTietHoaDon", "type": "dependency", "label": "quản lý chi tiết"},
+          {"from": "CTLBanHang", "to": "KhachHang", "type": "dependency", "label": "tra cứu"},
+          {"from": "HoaDon", "to": "ChiTietHoaDon", "type": "composition", "multiplicityFrom": "1", "multiplicityTo": "1..*"}
+        ]
+      }
+    },
+    {
+      "id": "SQ01_ThemMatHang",
+      "type": "sequence",
+      "title": "Biểu đồ tuần tự - Thêm mặt hàng mới",
+      "format": "png",
+      "data": {
+        "participants": [
+          {"id": "NV", "label": "Nhân viên", "type": "actor"},
+          {"id": "UI", "label": "UCQuanLyMatHang", "type": "boundary"},
+          {"id": "CTL", "label": "CTLQuanLyMatHang", "type": "control"},
+          {"id": "MH", "label": "MatHang", "type": "entity"}
+        ],
+        "messages": [
+          {"from": "NV", "to": "UI", "label": "chọn Thêm mặt hàng mới"},
+          {"from": "UI", "to": "NV", "kind": "return", "label": "hiển thị form nhập thông tin"},
+          {"from": "NV", "to": "UI", "label": "nhập mã, tên, giá bán, tồn kho"},
+          {"from": "UI", "to": "CTL", "label": "guiYeuCauThemMatHang(thongTin)"},
+          {"from": "CTL", "to": "MH", "label": "kiemTraMaMatHang(maMatHang)"},
+          {"from": "MH", "to": "CTL", "kind": "return", "label": "kết quả kiểm tra trùng mã"},
+          {"from": "CTL", "to": "MH", "label": "themMoi(thongTin)"},
+          {"from": "MH", "to": "CTL", "kind": "return", "label": "xác nhận lưu thành công"},
+          {"from": "CTL", "to": "UI", "kind": "return", "label": "cập nhật danh sách"},
+          {"from": "UI", "to": "NV", "kind": "return", "label": "hiển thị thông báo thành công"}
+        ]
+      }
+    },
+    {
+      "id": "SQ02_BanHangTrucTiep",
+      "type": "sequence",
+      "title": "Biểu đồ tuần tự - Bán hàng trực tiếp tại siêu thị",
+      "format": "png",
+      "data": {
+        "participants": [
+          {"id": "NV", "label": "Nhân viên", "type": "actor"},
+          {"id": "UIBanHang", "label": "UCBanHang", "type": "boundary"},
+          {"id": "CTLBanHang", "label": "CTLBanHang", "type": "control"},
+          {"id": "MatHang", "label": "MatHang", "type": "entity"},
+          {"id": "HoaDon", "label": "HoaDon", "type": "entity"},
+          {"id": "ChiTiet", "label": "ChiTietHoaDon", "type": "entity"}
+        ],
+        "messages": [
+          {"from": "NV", "to": "UIBanHang", "label": "tạo phiên bán hàng"},
+          {"from": "UIBanHang", "to": "CTLBanHang", "label": "taoPhienBanHang()"},
+          {"from": "NV", "to": "UIBanHang", "label": "chọn/ quét mặt hàng"},
+          {"from": "UIBanHang", "to": "CTLBanHang", "label": "themMatHang(maMatHang, soLuong)"},
+          {"from": "CTLBanHang", "to": "MatHang", "label": "kiemTraTonKho(soLuong)"},
+          {"from": "MatHang", "to": "CTLBanHang", "kind": "return", "label": "thông tin và trạng thái tồn kho"},
+          {"from": "CTLBanHang", "to": "ChiTiet", "label": "taoChiTietHoaDon(soLuong, donGia)"},
+          {"from": "ChiTiet", "to": "CTLBanHang", "kind": "return", "label": "thanhTien"},
+          {"from": "CTLBanHang", "to": "HoaDon", "label": "themChiTiet(chiTiet)"},
+          {"from": "CTLBanHang", "to": "UIBanHang", "kind": "return", "label": "cập nhật tổng tiền tạm tính"},
+          {"from": "NV", "to": "UIBanHang", "label": "xác nhận thanh toán"},
+          {"from": "UIBanHang", "to": "CTLBanHang", "label": "xacNhanThanhToan()"},
+          {"from": "CTLBanHang", "to": "HoaDon", "label": "tinhTongTien(); luuHoaDon()"},
+          {"from": "CTLBanHang", "to": "MatHang", "label": "giamTonKho()"},
+          {"from": "CTLBanHang", "to": "UIBanHang", "kind": "return", "label": "kết quả giao dịch"},
+          {"from": "UIBanHang", "to": "NV", "kind": "return", "label": "hiển thị và in hóa đơn"}
+        ]
+      }
+    },
+    {
+      "id": "AC01_ThemMatHang",
+      "type": "activity",
+      "title": "Biểu đồ hoạt động - Thêm mặt hàng mới",
+      "format": "png",
+      "data": {
+        "statements": [
+          {"kind": "start", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Đăng nhập hệ thống QLBH", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Chọn Cập nhật danh sách Mặt hàng", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Kiểm tra quyền cập nhật", "lane": "Hệ thống QLBH"},
+          {"kind": "if", "label": "Có quyền cập nhật?", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Hiển thị form thêm mặt hàng", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Nhập thông tin mặt hàng mới", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Kiểm tra dữ liệu và mã mặt hàng", "lane": "Hệ thống QLBH"},
+          {"kind": "if", "label": "Dữ liệu hợp lệ?", "lane": "Hệ thống QLBH"},
+          {"kind": "if", "label": "Mã mặt hàng chưa tồn tại?", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Lưu mặt hàng vào danh sách", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Cập nhật giao diện danh sách", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Hiển thị thông báo thành công", "lane": "Hệ thống QLBH"},
+          {"kind": "stop", "lane": "Hệ thống QLBH"},
+          {"kind": "else", "label": "Mã đã tồn tại", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Hiển thị lỗi trùng mã mặt hàng", "lane": "Hệ thống QLBH"},
+          {"kind": "stop", "lane": "Hệ thống QLBH"},
+          {"kind": "endif", "lane": "Hệ thống QLBH"},
+          {"kind": "else", "label": "Dữ liệu không hợp lệ", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Hiển thị lỗi dữ liệu nhập", "lane": "Hệ thống QLBH"},
+          {"kind": "stop", "lane": "Hệ thống QLBH"},
+          {"kind": "endif", "lane": "Hệ thống QLBH"},
+          {"kind": "else", "label": "Không có quyền", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Hiển thị thông báo không có quyền", "lane": "Hệ thống QLBH"},
+          {"kind": "stop", "lane": "Hệ thống QLBH"},
+          {"kind": "endif", "lane": "Hệ thống QLBH"}
+        ]
+      }
+    },
+    {
+      "id": "AC02_BanHangTrucTiep",
+      "type": "activity",
+      "title": "Biểu đồ hoạt động - Bán hàng trực tiếp tại siêu thị",
+      "format": "png",
+      "data": {
+        "statements": [
+          {"kind": "start", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Đăng nhập hệ thống QLBH", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Tạo phiên bán hàng mới", "lane": "Nhân viên"},
+          {"kind": "repeat", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Quét mã hoặc chọn mặt hàng", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Kiểm tra tồn kho", "lane": "Hệ thống QLBH"},
+          {"kind": "if", "label": "Đủ tồn kho?", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Thêm chi tiết bán hàng", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Cập nhật số tiền tạm tính", "lane": "Hệ thống QLBH"},
+          {"kind": "else", "label": "Không đủ tồn kho", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Hiển thị cảnh báo không đủ hàng", "lane": "Hệ thống QLBH"},
+          {"kind": "endif", "lane": "Hệ thống QLBH"},
+          {"kind": "repeat_while", "label": "Khách còn chọn mặt hàng?", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Xác nhận khách hàng và hình thức thanh toán", "lane": "Nhân viên"},
+          {"kind": "action", "label": "Tính tổng tiền cần thanh toán", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Thực hiện thanh toán", "lane": "Nhân viên"},
+          {"kind": "if", "label": "Thanh toán thành công?", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Lưu hóa đơn bán hàng", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Cập nhật tồn kho", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "In hóa đơn cho khách", "lane": "Hệ thống QLBH"},
+          {"kind": "stop", "lane": "Hệ thống QLBH"},
+          {"kind": "else", "label": "Thanh toán thất bại", "lane": "Hệ thống QLBH"},
+          {"kind": "action", "label": "Hiển thị lỗi và cho phép thử lại", "lane": "Hệ thống QLBH"},
+          {"kind": "stop", "lane": "Hệ thống QLBH"},
+          {"kind": "endif", "lane": "Hệ thống QLBH"}
+        ]
+      }
+    },
+    {
+      "id": "ST01_TrangThaiDonHangOnline",
+      "type": "state",
+      "title": "Biểu đồ trạng thái - Đơn hàng online",
+      "format": "png",
+      "data": {
+        "states": [
+          {"id": "ChoDuyet", "label": "Chờ duyệt"},
+          {"id": "DaDuyet", "label": "Đã duyệt"},
+          {"id": "DangGiao", "label": "Đang giao"},
+          {"id": "HoanThanh", "label": "Hoàn thành"},
+          {"id": "BiHuy", "label": "Đã hủy"}
+        ],
+        "transitions": [
+          {"from": "*", "to": "ChoDuyet", "event": "Khách hàng đặt đơn online"},
+          {"from": "ChoDuyet", "to": "DaDuyet", "event": "Hệ thống xác nhận đơn"},
+          {"from": "DaDuyet", "to": "DangGiao", "event": "Bắt đầu giao hàng"},
+          {"from": "DangGiao", "to": "HoanThanh", "event": "Khách nhận hàng"},
+          {"from": "ChoDuyet", "to": "BiHuy", "event": "Hủy đơn", "guard": "Khách hủy hoặc hàng không còn"},
+          {"from": "DaDuyet", "to": "BiHuy", "event": "Hủy đơn", "guard": "Chưa bắt đầu giao hàng"}
+        ]
+      }
+    }
+  ]
+}
