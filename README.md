@@ -24,7 +24,7 @@ qldbh_diagram_tools/
 | `SC_UC01_ThemMatHang` | Kịch bản use case | Thêm mặt hàng mới — 9 bước chính, 3 luồng thay thế (dữ liệu lỗi, trùng mã, không đủ quyền) |
 | `SC_UC02_BanHangTrucTiep` | Kịch bản use case | Bán hàng trực tiếp — 9 bước chính, 3 luồng thay thế (hết tồn kho, thành viên, thanh toán thất bại) |
 | `CD01_LopPhanTich_ThucThe` | Lớp phân tích | 7 lớp thực thể: NhanVien, KhachHang, MatHang, HoaDon, ChiTietHoaDon, DonHangOnline, DangKyThanhVien — kèm đa lượng, cấu tạo (HoaDon ◆— ChiTietHoaDon), kết tập |
-| `CD02_LopThietKe_Bien_DieuKhien` | Lớp thiết kế | 11 lớp Entity–Boundary–Control, đúng mô hình 3 lớp của.iconix/RUP |
+| `CD02_LopThietKe_Bien_DieuKhien` | Lớp thiết kế | 11 lớp Entity–Boundary–Control, đúng mô hình 3 lớp của ICONIX/RUP |
 | `SQ01_ThemMatHang` | Tuần tự | Thêm mặt hàng: NV → boundary → control → entity, 10 thông điệp có đánh số |
 | `SQ02_BanHangTrucTiep` | Tuần tự | Bán hàng: tạo phiên → quét hàng → kiểm tồn → tạo chi tiết → thanh toán → giảm tồn kho (16 thông điệp) |
 | `AC01_ThemMatHang` | Hoạt động | Swimlane Nhân viên / Hệ thống: kiểm quyền → nhập liệu → kiểm tra dữ liệu + trùng mã → lưu, 4 điểm kết thúc |
