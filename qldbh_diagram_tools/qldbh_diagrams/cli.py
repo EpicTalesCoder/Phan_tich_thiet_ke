@@ -102,6 +102,10 @@ def build_parser() -> argparse.ArgumentParser:
     output_group.add_argument("--stdout", action="store_true", help="Print generated source to stdout")
     generate_parser.add_argument("--scenario", action="store_true", help="Generate Markdown scenario instead of PlantUML")
     generate_parser.add_argument("--name", help="Override output file base name when writing files")
+    generate_parser.add_argument("--style", choices=["vp", "plain"], default="vp",
+                                 help="vp = Visual-Paradigm-like white/black theme (default)")
+    generate_parser.add_argument("--engine", choices=["smetana", "dot"], default="smetana",
+                                 help="dot needs Graphviz installed but lays out better")
 
     render_parser = subparsers.add_parser(
         "render",
@@ -116,6 +120,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=30,
         help="PlantUML process timeout in seconds",
     )
+    render_parser.add_argument("--style", choices=["vp", "plain"], default="vp",
+                               help="vp = Visual-Paradigm-like white/black theme (default)")
+    render_parser.add_argument("--engine", choices=["smetana", "dot"], default="smetana",
+                               help="dot needs Graphviz installed but lays out better")
 
     schemas_parser = subparsers.add_parser("examples", help="List built-in diagram IDs")
     schemas_parser.add_argument("--json", action="store_true")
@@ -140,7 +148,7 @@ def command_generate(args: argparse.Namespace) -> int:
         if args.scenario or diagram["type"] == "use_case_scenario":
             print(generate_scenario_markdown(diagram["data"]), end="")
         else:
-            print(generate_plantuml(diagram), end="")
+            print(generate_plantuml(diagram, style=args.style, engine=args.engine), end="")
         return 0
 
     if args.out_dir is None:
@@ -153,7 +161,7 @@ def command_generate(args: argparse.Namespace) -> int:
             content = generate_scenario_markdown(diagram["data"])
         else:
             output_file = args.out_dir / f"{base_name}.puml"
-            content = generate_plantuml(diagram)
+            content = generate_plantuml(diagram, style=args.style, engine=args.engine)
         write_text(output_file, content)
         print(f"Generated {output_file}")
     return 0
@@ -174,7 +182,7 @@ def command_render(args: argparse.Namespace) -> int:
         output_file = ensure_valid_output_path(
             args.out_dir / f"{base_name}.{diagram.get('format', 'png')}", diagram.get("format", "png")
         )
-        write_text(plantuml_file, generate_plantuml(diagram))
+        write_text(plantuml_file, generate_plantuml(diagram, style=args.style, engine=args.engine))
         render_file(plantuml_file, output_file, timeout=args.timeout)
         actual_file = expected_output_file(plantuml_file, output_file.suffix[1:])
         if not actual_file.exists():
