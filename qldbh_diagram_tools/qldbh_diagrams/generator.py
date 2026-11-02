@@ -6,6 +6,76 @@ import re
 from typing import Any
 
 
+
+# ---- Style profiles ---------------------------------------------------------
+# "vp" imitates the clean white/black look of diagrams drawn in Visual Paradigm.
+# "plain" keeps the original PlantUML default look.
+
+_VP_COMMON = [
+    "skinparam backgroundColor white",
+    "skinparam defaultFontName Arial",
+    "skinparam shadowing false",
+    "skinparam ArrowColor #1F1F1F",
+    "skinparam ArrowThickness 1",
+    "skinparam titleFontStyle bold",
+]
+
+_VP_PER_TYPE = {
+    "use_case": [
+        "skinparam actorBorderColor #1F1F1F",
+        "skinparam actorFontColor #1F1F1F",
+        "skinparam usecaseBorderColor #1F1F1F",
+        "skinparam usecaseBackgroundColor white",
+        "skinparam usecaseFontColor #1F1F1F",
+        "skinparam rectangleBorderColor #1F1F1F",
+        "skinparam rectangleBackgroundColor white",
+        "skinparam rectangleFontColor #1F1F1F",
+        "skinparam rectangleFontStyle bold",
+        "skinparam noteBackgroundColor #FFF9C4",
+        "skinparam noteBorderColor #9E9E9E",
+        "skinparam packageStyle rectangle",
+    ],
+    "class": [
+        "skinparam classBorderColor #1F1F1F",
+        "skinparam classBackgroundColor white",
+        "skinparam classFontColor #1F1F1F",
+        "skinparam classArrowColor #1F1F1F",
+        "skinparam classAttributeIconSize 0",
+        "hide circle",
+        "skinparam linetype ortho",
+    ],
+    "sequence": [
+        "skinparam sequenceParticipantBorderColor #1F1F1F",
+        "skinparam sequenceParticipantBackgroundColor white",
+        "skinparam sequenceLifeLineBorderColor #757575",
+        "skinparam sequenceArrowColor #1F1F1F",
+        "skinparam sequenceActorBorderColor #1F1F1F",
+    ],
+    "activity": [
+        "skinparam activityBorderColor #1F1F1F",
+        "skinparam activityBackgroundColor white",
+        "skinparam activityDiamondBackgroundColor white",
+        "skinparam activityDiamondBorderColor #1F1F1F",
+        "skinparam activityArrowColor #1F1F1F",
+        "skinparam partitionBorderColor #1F1F1F",
+        "skinparam swimlaneBorderColor #1F1F1F",
+        "skinparam swimlaneTitleFontStyle bold",
+    ],
+    "state": [
+        "skinparam stateBorderColor #1F1F1F",
+        "skinparam stateBackgroundColor white",
+        "skinparam stateArrowColor #1F1F1F",
+        "skinparam linetype ortho",
+    ],
+}
+
+
+def _style_lines(style: str, diagram_type: str) -> list[str]:
+    if style != "vp":
+        return []
+    return list(_VP_COMMON) + list(_VP_PER_TYPE.get(diagram_type, []))
+
+
 def _safe_label(value: str) -> str:
     """Make a label safe for one-line PlantUML/Markdown usage."""
     return re.sub(r"\s+", " ", str(value)).replace("\n", " ").strip()
@@ -15,34 +85,45 @@ def _quote_label(value: str) -> str:
     return '"' + _safe_label(value).replace('"', "'") + '"'
 
 
-def generate_plantuml(diagram: dict[str, Any]) -> str:
+def generate_plantuml(
+    diagram: dict[str, Any],
+    style: str = "vp",
+    engine: str = "smetana",
+) -> str:
     diagram_type = diagram["type"]
     data = diagram["data"]
     if diagram_type == "use_case":
-        return generate_use_case(diagram["title"], data)
+        return generate_use_case(diagram["title"], data, style=style, engine=engine)
     if diagram_type == "class":
-        return generate_class(diagram["title"], data)
+        return generate_class(diagram["title"], data, style=style, engine=engine)
     if diagram_type == "sequence":
-        return generate_sequence(diagram["title"], data)
+        return generate_sequence(diagram["title"], data, style=style, engine=engine)
     if diagram_type == "activity":
-        return generate_activity(diagram["title"], data)
+        return generate_activity(diagram["title"], data, style=style, engine=engine)
     if diagram_type == "state":
-        return generate_state(diagram["title"], data)
+        return generate_state(diagram["title"], data, style=style, engine=engine)
     raise ValueError(f"Diagram type '{diagram_type}' has no PlantUML generator")
 
 
-def generate_use_case(title: str, data: dict[str, Any]) -> str:
-    lines = [
-        "@startuml",
+def generate_use_case(
+    title: str,
+    data: dict[str, Any],
+    style: str = "vp",
+    engine: str = "smetana",
+) -> str:
+    lines = ["@startuml"]
+    if engine == "smetana":
         # Smetana layout ships inside plantuml.jar, so use case diagrams render
         # without a Graphviz installation.
-        "!pragma layout smetana",
-        f"title {_quote_label(title)}",
-        "left to right direction",
-        "skinparam packageStyle rectangle",
-        "skinparam shadowing false",
-        "",
-    ]
+        lines.append("!pragma layout smetana")
+    lines.extend(
+        [
+            f"title {_quote_label(title)}",
+            "left to right direction",
+        ]
+    )
+    lines.extend(_style_lines(style, "use_case"))
+    lines.append("")
 
     system = data.get("system")
     if system:
@@ -78,17 +159,20 @@ def generate_use_case(title: str, data: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def generate_class(title: str, data: dict[str, Any]) -> str:
-    lines = [
-        "@startuml",
+def generate_class(
+    title: str,
+    data: dict[str, Any],
+    style: str = "vp",
+    engine: str = "smetana",
+) -> str:
+    lines = ["@startuml"]
+    if engine == "smetana":
         # Smetana layout ships inside plantuml.jar, so class diagrams render
         # without a Graphviz installation.
-        "!pragma layout smetana",
-        f"title {_quote_label(title)}",
-        "skinparam classAttributeIconSize 0",
-        "skinparam shadowing false",
-        "",
-    ]
+        lines.append("!pragma layout smetana")
+    lines.extend([f"title {_quote_label(title)}"])
+    lines.extend(_style_lines(style, "class"))
+    lines.append("")
     relation_syntax = {
         "association": "--",
         "inheritance": "--|>",
@@ -146,15 +230,20 @@ def generate_class(title: str, data: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def generate_sequence(title: str, data: dict[str, Any]) -> str:
+def generate_sequence(
+    title: str,
+    data: dict[str, Any],
+    style: str = "vp",
+    engine: str = "smetana",
+) -> str:
     lines = [
         "@startuml",
         f"title {_quote_label(title)}",
         "autonumber",
         "skinparam responseMessageBelowArrow true",
-        "skinparam shadowing false",
-        "",
     ]
+    lines.extend(_style_lines(style, "sequence"))
+    lines.append("")
     for participant in data["participants"]:
         kind = participant.get("type", "participant")
         label = _quote_label(participant.get("label", participant["id"]))
@@ -182,13 +271,16 @@ def generate_sequence(title: str, data: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def generate_activity(title: str, data: dict[str, Any]) -> str:
-    lines = [
-        "@startuml",
-        f"title {_quote_label(title)}",
-        "start" if not _starts_elsewhere(data["statements"]) else "skinparam shadowing false",
-        "skinparam shadowing false",
-    ]
+def generate_activity(
+    title: str,
+    data: dict[str, Any],
+    style: str = "vp",
+    engine: str = "smetana",
+) -> str:
+    lines = ["@startuml", f"title {_quote_label(title)}"]
+    lines.extend(_style_lines(style, "activity"))
+    if not _starts_elsewhere(data["statements"]):
+        lines.append("start")
     current_lane = None
     for statement in data["statements"]:
         kind = statement["kind"]
@@ -233,16 +325,20 @@ def _starts_elsewhere(statements: list[dict[str, Any]]) -> bool:
     return bool(statements) and statements[0].get("kind") == "start"
 
 
-def generate_state(title: str, data: dict[str, Any]) -> str:
-    lines = [
-        "@startuml",
+def generate_state(
+    title: str,
+    data: dict[str, Any],
+    style: str = "vp",
+    engine: str = "smetana",
+) -> str:
+    lines = ["@startuml"]
+    if engine == "smetana":
         # Smetana layout ships inside plantuml.jar, so state diagrams render
         # without a Graphviz installation.
-        "!pragma layout smetana",
-        f"title {_quote_label(title)}",
-        "skinparam shadowing false",
-        "",
-    ]
+        lines.append("!pragma layout smetana")
+    lines.extend([f"title {_quote_label(title)}"])
+    lines.extend(_style_lines(style, "state"))
+    lines.append("")
     for state in data["states"]:
         lines.append(f"state {_quote_label(state['label'])} as {state['id']}")
     lines.append("")
