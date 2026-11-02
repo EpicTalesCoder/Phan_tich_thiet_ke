@@ -1,0 +1,40 @@
+@startuml
+title "Biểu đồ tuần tự - Bán hàng trực tiếp tại siêu thị"
+autonumber
+skinparam responseMessageBelowArrow true
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F1F1F
+skinparam ArrowThickness 1
+skinparam titleFontStyle bold
+skinparam sequenceParticipantBorderColor #1F1F1F
+skinparam sequenceParticipantBackgroundColor white
+skinparam sequenceLifeLineBorderColor #757575
+skinparam sequenceArrowColor #1F1F1F
+skinparam sequenceActorBorderColor #1F1F1F
+
+actor "Nhân viên" as NV
+boundary "UCBanHang" as UIBanHang
+control "CTLBanHang" as CTLBanHang
+entity "MatHang" as MatHang
+entity "HoaDon" as HoaDon
+entity "ChiTietHoaDon" as ChiTiet
+
+NV -> UIBanHang : tạo phiên bán hàng
+UIBanHang -> CTLBanHang : taoPhienBanHang()
+NV -> UIBanHang : chọn/ quét mặt hàng
+UIBanHang -> CTLBanHang : themMatHang(maMatHang, soLuong)
+CTLBanHang -> MatHang : kiemTraTonKho(soLuong)
+MatHang --> CTLBanHang : thông tin và trạng thái tồn kho
+CTLBanHang -> ChiTiet : taoChiTietHoaDon(soLuong, donGia)
+ChiTiet --> CTLBanHang : thanhTien
+CTLBanHang -> HoaDon : themChiTiet(chiTiet)
+CTLBanHang --> UIBanHang : cập nhật tổng tiền tạm tính
+NV -> UIBanHang : xác nhận thanh toán
+UIBanHang -> CTLBanHang : xacNhanThanhToan()
+CTLBanHang -> HoaDon : tinhTongTien(); luuHoaDon()
+CTLBanHang -> MatHang : giamTonKho()
+CTLBanHang --> UIBanHang : kết quả giao dịch
+UIBanHang --> NV : hiển thị và in hóa đơn
+@enduml

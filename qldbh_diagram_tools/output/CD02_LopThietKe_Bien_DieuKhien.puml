@@ -1,0 +1,112 @@
+@startuml
+title "Câu 2b - Biểu đồ lớp thiết kế Entity - Boundary - Control"
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F1F1F
+skinparam ArrowThickness 1
+skinparam titleFontStyle bold
+skinparam classBorderColor #1F1F1F
+skinparam classBackgroundColor white
+skinparam classFontColor #1F1F1F
+skinparam classArrowColor #1F1F1F
+skinparam classAttributeIconSize 0
+hide circle
+skinparam linetype ortho
+
+class "UCQuanLyMatHang" as UIQuanLyMatHang <<boundary>>
+{
+  - danhSachMatHang: List
+  +hienThiDanhSach()
+  +nhapThongTinMatHang()
+  +hienThiThongBao()
+}
+class "UCBanHang" as UIBanHang <<boundary>>
+{
+  - gioHang: List
+  +themMatHang()
+  +capNhatSoLuong()
+  +hienThiTongTien()
+}
+class "UCDangNhap" as UIDangNhap <<boundary>>
+{
+  - tenDangNhap: String
+  - matKhau: String
+  +nhapThongTinDangNhap()
+  +hienThiLoi()
+}
+class "CTLQuanLyMatHang" <<control>>
+{
+  +kiemTraQuyen()
+  +kiemTraDuLieu()
+  +themMatHangMoi()
+  +capNhatMatHang()
+}
+class "CTLBanHang" <<control>>
+{
+  +taoPhienBanHang()
+  +themChiTietBanHang()
+  +kiemTraTonKho()
+  +tinhTongTien()
+  +taoHoaDon()
+}
+class "CTLDangNhap" <<control>>
+{
+  +xuLyDangNhap()
+  +phanQuyen()
+}
+class "NhanVien" <<entity>>
+{
+  - maNhanVien
+  - hoTen
+  - vaiTro
+  +dangNhap()
+  +coQuyen()
+}
+class "KhachHang" <<entity>>
+{
+  - maKhachHang
+  - hoTen
+  - laThanhVien
+  +dangKyThanhVien()
+  +datHangOnline()
+}
+class "MatHang" <<entity>>
+{
+  - maMatHang
+  - tenMatHang
+  - giaBan
+  - tonKho
+  +themMoi()
+  +capNhat()
+  +xoa()
+  +kiemTraTonKho()
+}
+class "HoaDon" <<entity>>
+{
+  - maHoaDon
+  - ngayLap
+  - tongTien
+  +themChiTiet()
+  +tinhTongTien()
+  +luuHoaDon()
+}
+class "ChiTietHoaDon" <<entity>>
+{
+  - soLuong
+  - donGiaBan
+  - thanhTien
+  +tinhThanhTien()
+}
+
+UIQuanLyMatHang -- CTLQuanLyMatHang : gửi yêu cầu
+UIBanHang -- CTLBanHang : gửi yêu cầu
+UIDangNhap -- CTLDangNhap : gửi thông tin
+CTLDangNhap ..> NhanVien : xác thực
+CTLQuanLyMatHang ..> MatHang : quản lý
+CTLBanHang ..> MatHang : kiểm tra
+CTLBanHang ..> HoaDon : tạo/lưu
+CTLBanHang ..> ChiTietHoaDon : quản lý chi tiết
+CTLBanHang ..> KhachHang : tra cứu
+HoaDon "1" *-- "1..*" ChiTietHoaDon
+@enduml

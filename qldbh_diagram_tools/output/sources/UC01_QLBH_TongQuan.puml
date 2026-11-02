@@ -1,0 +1,55 @@
+@startuml
+title "Biểu đồ Use Case tổng quát - Hệ thống QLBH siêu thị"
+left to right direction
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F1F1F
+skinparam ArrowThickness 1
+skinparam titleFontStyle bold
+skinparam actorBorderColor #1F1F1F
+skinparam actorFontColor #1F1F1F
+skinparam usecaseBorderColor #1F1F1F
+skinparam usecaseBackgroundColor white
+skinparam usecaseFontColor #1F1F1F
+skinparam rectangleBorderColor #1F1F1F
+skinparam rectangleBackgroundColor white
+skinparam rectangleFontColor #1F1F1F
+skinparam rectangleFontStyle bold
+skinparam noteBackgroundColor #FFF9C4
+skinparam noteBorderColor #9E9E9E
+skinparam packageStyle rectangle
+
+rectangle "Hệ thống QLBH siêu thị" {
+  usecase "Đăng nhập" as UC_DangNhap
+  usecase "Cập nhật danh sách Mặt hàng" as UC_CapNhatMatHang
+  usecase "Thêm mặt hàng mới" as UC_ThemMatHang
+  usecase "Xóa mặt hàng" as UC_XoaMatHang
+  usecase "Sửa thông tin mặt hàng" as UC_SuaMatHang
+  usecase "Bán hàng trực tiếp tại siêu thị" as UC_BanHangTrucTiep
+  usecase "Tạo hóa đơn bán hàng" as UC_TaoHoaDon
+  usecase "Thanh toán" as UC_ThanhToan
+  usecase "Đăng ký thành viên" as UC_DangKyThanhVien
+  usecase "Đặt mua hàng online" as UC_DatHangOnline
+}
+
+actor "Nhân viên" as A_NhanVien
+actor "Khách hàng" as A_KhachHang
+actor "Hệ thống thanh toán" as A_HeThongThanhToan
+
+A_NhanVien -- UC_CapNhatMatHang
+A_NhanVien -- UC_BanHangTrucTiep
+A_KhachHang -- UC_DangKyThanhVien
+A_KhachHang -- UC_DatHangOnline
+A_HeThongThanhToan -- UC_ThanhToan
+UC_CapNhatMatHang ..> UC_DangNhap : include
+UC_BanHangTrucTiep ..> UC_DangNhap : include
+UC_DangKyThanhVien ..> UC_DangNhap : include
+UC_DatHangOnline ..> UC_DangNhap : include
+UC_ThemMatHang ..> UC_CapNhatMatHang : include
+UC_XoaMatHang ..> UC_CapNhatMatHang : include
+UC_SuaMatHang ..> UC_CapNhatMatHang : include
+UC_BanHangTrucTiep ..> UC_TaoHoaDon : include
+UC_TaoHoaDon ..> UC_ThanhToan : include
+note right of UC_DangNhap : Yêu cầu chung của nhân viên và khách hàng khi truy nhập hệ thống
+@enduml

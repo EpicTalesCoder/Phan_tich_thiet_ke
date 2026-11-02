@@ -1,0 +1,48 @@
+@startuml
+title "Biểu đồ hoạt động - Bán hàng trực tiếp tại siêu thị"
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F1F1F
+skinparam ArrowThickness 1
+skinparam titleFontStyle bold
+skinparam activityBorderColor #1F1F1F
+skinparam activityBackgroundColor white
+skinparam activityDiamondBackgroundColor white
+skinparam activityDiamondBorderColor #1F1F1F
+skinparam activityArrowColor #1F1F1F
+skinparam partitionBorderColor #1F1F1F
+skinparam swimlaneBorderColor #1F1F1F
+skinparam swimlaneTitleFontStyle bold
+|Nhân viên|
+start
+:Đăng nhập hệ thống QLBH;
+:Tạo phiên bán hàng mới;
+repeat
+:Quét mã hoặc chọn mặt hàng;
+|Hệ thống QLBH|
+:Kiểm tra tồn kho;
+if (Đủ tồn kho?) then (Đúng)
+:Thêm chi tiết bán hàng;
+:Cập nhật số tiền tạm tính;
+else (Không đủ tồn kho)
+:Hiển thị cảnh báo không đủ hàng;
+endif
+repeat while (Khách còn chọn mặt hàng?) is (Đúng)
+|Nhân viên|
+:Xác nhận khách hàng và hình thức thanh toán;
+|Hệ thống QLBH|
+:Tính tổng tiền cần thanh toán;
+|Nhân viên|
+:Thực hiện thanh toán;
+|Hệ thống QLBH|
+if (Thanh toán thành công?) then (Đúng)
+:Lưu hóa đơn bán hàng;
+:Cập nhật tồn kho;
+:In hóa đơn cho khách;
+stop
+else (Thanh toán thất bại)
+:Hiển thị lỗi và cho phép thử lại;
+stop
+endif
+@enduml

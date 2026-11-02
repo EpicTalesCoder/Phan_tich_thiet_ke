@@ -1,0 +1,26 @@
+@startuml
+title "Biểu đồ trạng thái - Đơn hàng online"
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F1F1F
+skinparam ArrowThickness 1
+skinparam titleFontStyle bold
+skinparam stateBorderColor #1F1F1F
+skinparam stateBackgroundColor white
+skinparam stateArrowColor #1F1F1F
+skinparam linetype ortho
+
+state "Chờ duyệt" as ChoDuyet
+state "Đã duyệt" as DaDuyet
+state "Đang giao" as DangGiao
+state "Hoàn thành" as HoanThanh
+state "Đã hủy" as BiHuy
+
+[*] --> ChoDuyet : Khách hàng đặt đơn online
+ChoDuyet --> DaDuyet : Hệ thống xác nhận đơn
+DaDuyet --> DangGiao : Bắt đầu giao hàng
+DangGiao --> HoanThanh : Khách nhận hàng
+ChoDuyet --> BiHuy : Hủy đơn [Khách hủy hoặc hàng không còn]
+DaDuyet --> BiHuy : Hủy đơn [Chưa bắt đầu giao hàng]
+@enduml

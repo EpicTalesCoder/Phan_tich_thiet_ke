@@ -1,0 +1,95 @@
+@startuml
+title "Câu 2a - Biểu đồ lớp phân tích các lớp thực thể"
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F1F1F
+skinparam ArrowThickness 1
+skinparam titleFontStyle bold
+skinparam classBorderColor #1F1F1F
+skinparam classBackgroundColor white
+skinparam classFontColor #1F1F1F
+skinparam classArrowColor #1F1F1F
+skinparam classAttributeIconSize 0
+hide circle
+skinparam linetype ortho
+
+class "NhanVien" <<entity>>
+{
+  - maNhanVien: String
+  - hoTen: String
+  - vaiTro: String
+  +dangNhap()
+  +coQuyenCapNhatMatHang()
+  +coQuyenBanHang()
+}
+class "KhachHang" <<entity>>
+{
+  - maKhachHang: String
+  - hoTen: String
+  - soDienThoai: String
+  - email: String
+  - laThanhVien: boolean
+  +dangKyThanhVien()
+  +datHangOnline()
+  +traCuuThongTin()
+}
+class "MatHang" <<entity>>
+{
+  - maMatHang: String
+  - tenMatHang: String
+  - donViTinh: String
+  - giaBan: double
+  - tonKho: int
+  +themMoi()
+  +capNhatThongTin()
+  +xoa()
+  +kiemTraTonKho()
+  +giamTonKho()
+}
+class "HoaDon" <<entity>>
+{
+  - maHoaDon: String
+  - ngayLap: Date
+  - loaiBan: String
+  - tongTien: double
+  +themChiTiet()
+  +tinhTongTien()
+  +luuHoaDon()
+  +inHoaDon()
+}
+class "ChiTietHoaDon" <<entity>>
+{
+  - maChiTiet: String
+  - soLuong: int
+  - donGiaBan: double
+  - thanhTien: double
+  +tinhThanhTien()
+}
+class "DonHangOnline" <<entity>>
+{
+  - maDonHang: String
+  - ngayDat: Date
+  - diaChiGiaoHang: String
+  - trangThai: String
+  +xacNhanDonHang()
+  +capNhatTrangThai()
+  +tinhTongTien()
+}
+class "DangKyThanhVien" <<entity>>
+{
+  - maDangKy: String
+  - ngayDangKy: Date
+  - trangThai: String
+  +xacNhanDangKy()
+  +tuChoiDangKy()
+}
+
+NhanVien "1" -- "0..*" MatHang : cập nhật
+NhanVien "1" -- "0..*" HoaDon : lập hóa đơn
+KhachHang "1" -- "0..*" DonHangOnline : đặt hàng
+KhachHang "1" -- "0..*" DangKyThanhVien : đăng ký
+MatHang "1" -- "0..*" ChiTietHoaDon : được bán trong
+HoaDon "1" *-- "1..*" ChiTietHoaDon : gồm
+HoaDon "0..1" o-- "0..*" DonHangOnline : phát sinh từ
+@enduml

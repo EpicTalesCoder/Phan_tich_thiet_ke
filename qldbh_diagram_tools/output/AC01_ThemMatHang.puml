@@ -1,0 +1,47 @@
+@startuml
+title "Biểu đồ hoạt động - Thêm mặt hàng mới"
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F1F1F
+skinparam ArrowThickness 1
+skinparam titleFontStyle bold
+skinparam activityBorderColor #1F1F1F
+skinparam activityBackgroundColor white
+skinparam activityDiamondBackgroundColor white
+skinparam activityDiamondBorderColor #1F1F1F
+skinparam activityArrowColor #1F1F1F
+skinparam partitionBorderColor #1F1F1F
+skinparam swimlaneBorderColor #1F1F1F
+skinparam swimlaneTitleFontStyle bold
+|Nhân viên|
+start
+:Đăng nhập hệ thống QLBH;
+:Chọn Cập nhật danh sách Mặt hàng;
+|Hệ thống QLBH|
+:Kiểm tra quyền cập nhật;
+if (Có quyền cập nhật?) then (Đúng)
+:Hiển thị form thêm mặt hàng;
+|Nhân viên|
+:Nhập thông tin mặt hàng mới;
+|Hệ thống QLBH|
+:Kiểm tra dữ liệu và mã mặt hàng;
+if (Dữ liệu hợp lệ?) then (Đúng)
+if (Mã mặt hàng chưa tồn tại?) then (Đúng)
+:Lưu mặt hàng vào danh sách;
+:Cập nhật giao diện danh sách;
+:Hiển thị thông báo thành công;
+stop
+else (Mã đã tồn tại)
+:Hiển thị lỗi trùng mã mặt hàng;
+stop
+endif
+else (Dữ liệu không hợp lệ)
+:Hiển thị lỗi dữ liệu nhập;
+stop
+endif
+else (Không có quyền)
+:Hiển thị thông báo không có quyền;
+stop
+endif
+@enduml

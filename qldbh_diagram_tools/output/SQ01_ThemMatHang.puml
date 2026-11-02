@@ -1,0 +1,32 @@
+@startuml
+title "Biểu đồ tuần tự - Thêm mặt hàng mới"
+autonumber
+skinparam responseMessageBelowArrow true
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowColor #1F1F1F
+skinparam ArrowThickness 1
+skinparam titleFontStyle bold
+skinparam sequenceParticipantBorderColor #1F1F1F
+skinparam sequenceParticipantBackgroundColor white
+skinparam sequenceLifeLineBorderColor #757575
+skinparam sequenceArrowColor #1F1F1F
+skinparam sequenceActorBorderColor #1F1F1F
+
+actor "Nhân viên" as NV
+boundary "UCQuanLyMatHang" as UI
+control "CTLQuanLyMatHang" as CTL
+entity "MatHang" as MH
+
+NV -> UI : chọn Thêm mặt hàng mới
+UI --> NV : hiển thị form nhập thông tin
+NV -> UI : nhập mã, tên, giá bán, tồn kho
+UI -> CTL : guiYeuCauThemMatHang(thongTin)
+CTL -> MH : kiemTraMaMatHang(maMatHang)
+MH --> CTL : kết quả kiểm tra trùng mã
+CTL -> MH : themMoi(thongTin)
+MH --> CTL : xác nhận lưu thành công
+CTL --> UI : cập nhật danh sách
+UI --> NV : hiển thị thông báo thành công
+@enduml
