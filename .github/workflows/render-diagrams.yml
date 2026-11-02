@@ -1,0 +1,71 @@
+name: Render QLBH diagrams
+
+on:
+  push:
+    paths:
+      - "qldbh_diagram_tools/definitions/**"
+      - "qldbh_diagram_tools/qldbh_diagrams/**"
+      - ".github/workflows/render-diagrams.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Graphviz and Java
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends graphviz default-jre-headless
+
+      - name: Download PlantUML jar
+        run: |
+          mkdir -p qldbh_diagram_tools/vendor
+          curl -sL -o qldbh_diagram_tools/vendor/plantuml.jar \
+            https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
+          ls -la qldbh_diagram_tools/vendor/
+
+      - name: Validate definitions
+        run: qldbh_diagram_tools/bin/qldbh-diagrams validate qldbh_diagram_tools/definitions/exam_diagrams.json
+
+      - name: Render diagrams (Visual Paradigm style, dot layout)
+        run: |
+          qldbh_diagram_tools/bin/qldbh-diagrams render \
+            qldbh_diagram_tools/definitions/exam_diagrams.json \
+            --out-dir qldbh_diagram_tools/output \
+            --style vp --engine dot --timeout 60
+
+      - name: Render sources for reference
+        run: |
+          qldbh_diagram_tools/bin/qldbh-diagrams generate \
+            qldbh_diagram_tools/definitions/exam_diagrams.json \
+            --out-dir qldbh_diagram_tools/output/sources \
+            --style vp --engine dot
+
+      - name: Commit rendered output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qldbh_diagram_tools/output
+          if git diff --cached --quiet; then
+            echo "No changes to output"
+          else
+            git commit -m "ci: render lai bieu do (auto) [skip ci]"
+            git push
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: qldbh-diagrams
+          path: qldbh_diagram_tools/output
